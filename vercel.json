@@ -1,0 +1,76 @@
+{
+  "version": 2,
+  "name": "ios-device-info",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/udid",
+      "dest": "/api/udid",
+      "headers": {
+        "Content-Type": "application/x-apple-aspen-config",
+        "Content-Disposition": "attachment; filename=device-info.mobileconfig",
+        "Cache-Control": "no-cache, no-store, must-revalidate"
+      }
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ],
+  "env": {
+    "TELEGRAM_BOT_TOKEN": "@telegram_bot_token",
+    "TELEGRAM_ADMIN_ID": "@telegram_admin_id",
+    "ENCRYPTION_KEY": "@encryption_key",
+    "NEXT_PUBLIC_APP_URL": "@app_url"
+  },
+  "functions": {
+    "src/app/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  },
+  "headers": [
+    {
+      "source": "/api/udid",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/x-apple-aspen-config"
+        },
+        {
+          "key": "Content-Disposition",
+          "value": "attachment; filename=device-info.mobileconfig"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    }
+  ]
+}
