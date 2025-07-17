@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iOS Device Info - Lấy thông tin thiết bị iPhone/iPad</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding-top: 40px;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.9);
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #2d3748;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            color: #4a5568;
+            font-weight: 400;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .feature-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .main-action {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 60px;
+            text-align: center;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .main-action h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #2d3748;
+        }
+
+        .main-action p {
+            font-size: 1.2rem;
+            color: #4a5568;
+            margin-bottom: 40px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .download-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px 50px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.3rem;
+            font-weight: 600;
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.5);
+        }
+
+        .download-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .security-badges {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .security-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #4a5568;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .security-badge::before {
+            content: "🛡️";
+            font-size: 1.2rem;
+        }
+
+        .instructions {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .instructions h3 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #2d3748;
+            text-align: center;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .step {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0 auto 20px;
+        }
+
+        .step h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2d3748;
+        }
+
+        .step p {
+            color: #4a5568;
+            font-size: 0.95rem;
+        }
+
+        .loading {
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .warning {
+            background: rgba(255, 243, 205, 0.9);
+            border: 1px solid #f6ad55;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+            color: #744210;
+        }
+
+        .warning strong {
+            color: #c05621;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .header p {
+                font-size: 1.1rem;
+            }
+
+            .feature-card {
+                padding: 30px;
+            }
+
+            .main-action {
+                padding: 40px 30px;
+            }
+
+            .main-action h2 {
+                font-size: 2rem;
+            }
+
+            .download-btn {
+                padding: 18px 40px;
+                font-size: 1.1rem;
+            }
+
+            .security-badges {
+                gap: 20px;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>iOS Device Info</h1>
+            <p>Công cụ chuyên nghiệp để lấy thông tin chi tiết thiết bị iPhone và iPad của bạn</p>
+        </div>
+
+        <!-- Features Grid -->
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Thông tin cơ bản</h3>
+                <ul class="feature-list">
+                    <li>UDID (Unique Device Identifier)</li>
+                    <li>Serial Number</li>
+                    <li>Model và Product Name</li>
+                    <li>iOS Version</li>
+                    <li>Build Version</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔧</div>
+                <h3>Thông tin nâng cao</h3>
+                <ul class="feature-list">
+                    <li>IMEI Number</li>
+                    <li>WiFi MAC Address</li>
+                    <li>Bluetooth MAC Address</li>
+                    <li>Device Name</li>
+                    <li>Phone Number</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Action -->
+        <div class="main-action">
+            <h2>Bắt đầu ngay</h2>
+            <p>Nhấn vào nút bên dưới để tải cấu hình và lấy thông tin thiết bị của bạn</p>
+            
+            <button class="download-btn" onclick="downloadConfig()">
+                <span class="btn-text">📥 Tải cấu hình ngay</span>
+                <span class="loading">
+                    <div class="spinner"></div>
+                    Đang tải...
+                </span>
+            </button>
+
+            <div class="security-badges">
+                <div class="security-badge">An toàn và bảo mật</div>
+                <div class="security-badge">Không lưu trữ dữ liệu</div>
+                <div class="security-badge">Hoạt động trên tất cả thiết bị iOS</div>
+            </div>
+
+            <div class="warning">
+                <strong>Lưu ý:</strong> Cấu hình này hoàn toàn an toàn và chỉ được sử dụng để lấy thông tin thiết bị. 
+                Bạn có thể gỡ bỏ profile sau khi sử dụng trong Settings → General → VPN & Device Management.
+            </div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="instructions">
+            <h3>Hướng dẫn sử dụng</h3>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h4>Tải cấu hình</h4>
+                    <p>Nhấn nút "Tải cấu hình" để tải file .mobileconfig về thiết bị</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h4>Cài đặt profile</h4>
+                    <p>Mở Settings → General → VPN & Device Management → Install Profile</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h4>Xem kết quả</h4>
+                    <p>Sau khi cài đặt, bạn sẽ được chuyển hướng để xem thông tin thiết bị</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function downloadConfig() {
+            const btn = document.querySelector('.download-btn');
+            const btnText = btn.querySelector('.btn-text');
+            const loading = btn.querySelector('.loading');
+            
+            // Show loading state
+            btnText.style.display = 'none';
+            loading.style.display = 'flex';
+            btn.disabled = true;
+            
+            // Create download link
+            const link = document.createElement('a');
+            link.href = '/api/udid';
+            link.download = 'device-info.mobileconfig';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Reset button after 2 seconds
+            setTimeout(() => {
+                btnText.style.display = 'inline';
+                loading.style.display = 'none';
+                btn.disabled = false;
+            }, 2000);
+        }
+
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate cards on scroll
+            const cards = document.querySelectorAll('.feature-card, .main-action, .instructions');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'all 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
